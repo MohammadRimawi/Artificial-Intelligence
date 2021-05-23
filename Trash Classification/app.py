@@ -55,7 +55,7 @@ def get_model():
 
 new_model = get_model()
 new_model.compile()
-new_model.load_weights('Trash Classification/model.h5')
+new_model.load_weights('/home/rimawi/Git repos/Artificial-Intelligence/Trash Classification/model.h5')
 
 
 UPLOAD_FOLDER = '/home/rimawi/Git repos/Artificial-Intelligence/Trash Classification/static/uploads'
@@ -95,7 +95,7 @@ def index():
             path = "/uploads/"+str(filename)
             print(path)
 
-            img = image.load_img("Trash Classification/static/"+path, target_size=(300, 300))
+            img = image.load_img("/home/rimawi/Git repos/Artificial-Intelligence//Trash Classification/static/"+path, target_size=(300, 300))
             x = image.img_to_array(img)
             x = np.expand_dims(x, axis=0)
 
@@ -103,7 +103,7 @@ def index():
             classes = new_model.predict_classes(images, batch_size=10)
             print("****************************************")
             data = {0: 'glass', 1: 'paper', 2: 'cardboard', 3: 'plastic', 4: 'metal', 5: 'trash'}
-            pre= data[classes[0]] 
+            pre = data[classes[0]] 
             print(pre)
 
             return render_template("index.html" ,path = path,pre=pre)
