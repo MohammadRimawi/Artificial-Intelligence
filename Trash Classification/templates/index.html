@@ -16,17 +16,22 @@
 
 <style>
     body{
+        padding: 50px 0;
         width:80%;
         margin: auto;
-
+        text-align:center;
     }
     #imageHolder{
-        width:100%;
+        width:300px;
         height:300px;
+        margin :auto;
     }
     #imageHolder img{
         width:100%;
         height:100%
+    }
+    form{
+        margin-top: 80px;
     }
 </style>
 
@@ -39,10 +44,10 @@
 {% if path != "" %}
 
     <div id = imageHolder>
-        <p>predication: {{pre}}</p>         
         <!-- {% autoescape false %}  -->
-
+        
         <img src="/static/{{path}}" alt="">
+        <p>prediction: {{pre}}</p>         
         <!-- {% endautoescape %}  -->
         
     </div>
