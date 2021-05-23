@@ -5,7 +5,6 @@ from werkzeug.utils import secure_filename
 
 import numpy as np
 
-
 from tensorflow import keras
 
 from keras.preprocessing import image
