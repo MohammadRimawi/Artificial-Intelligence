@@ -18,9 +18,7 @@ print(cp)
 cp = cp.sample(n=50, random_state=0)
 cpSt = StandardScaler().fit_transform(cp.values)
 net = sps.somNet(30, 30, cpSt, PBC=True, PCI=True)
-net.train(0.1, 100)
+net.train(0.1, 10000)
 net.diff_graph(show=True,printout=True)
-
-print("net")
 
 #%%
