@@ -20,6 +20,36 @@ from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, Activati
 from keras.preprocessing import image
 
 
+from PIL import Image
+import numpy as np
+from skimage import transform
+
+# train_datagen = ImageDataGenerator(
+#     rotation_range=15, #range for random rotations
+#     rescale=1./255, #rescaling factor to transform every pixel value from range [0,255] -> [0,1]
+#     shear_range=0.1, #shear intensity, the image will be distorted along an axis
+#     zoom_range=0.2, #zoom in an image
+#     horizontal_flip=True, #randomly flip inputs horizontally
+#     width_shift_range=0.1, #shift horizontally(left or right)
+#     height_shift_range=0.1 #shift vertically(up or down)
+# )
+
+# def load(filename):
+#    np_image = Image.open(filename)
+#    np_image = np.array(np_image).astype('float32')/255
+#    np_image = transform.resize(np_image, (256, 256, 3))
+#    np_image = np.expand_dims(np_image, axis=0)
+#    return np_image
+
+def load_image(img_path, show=False):
+
+    img = image.load_img(img_path, target_size=(300, 300))
+    img_tensor = image.img_to_array(img)                    # (height, width, channels)
+    img_tensor = np.expand_dims(img_tensor, axis=0)         # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
+    img_tensor /= 255.                                      # imshow expects values in the range [0, 1]
+
+
+    return img_tensor
 
 def get_model():
     model = Sequential([
@@ -54,11 +84,13 @@ def get_model():
     return model
 
 new_model = get_model()
+
+# new_model = keras.models.load_model('/home/rimawi/Git repos/Artificial-Intelligence/Trash Classification/model_model.h5')
+new_model.load_weights('model.h5')
 new_model.compile()
-new_model.load_weights('/home/rimawi/Git repos/Artificial-Intelligence/Trash Classification/model.h5')
+# new_model.summary()
 
-
-UPLOAD_FOLDER = '/home/rimawi/Git repos/Artificial-Intelligence/Trash Classification/static/uploads'
+UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
@@ -94,17 +126,26 @@ def index():
             print(filename)
             path = "/uploads/"+str(filename)
             print(path)
+            imgpath = "static/"+path
+            # img = image.load_img(imgpath, target_size=(300, 300))
+            # img = load(imgpath)
+            # x = image.img_to_array(img)
+            # x = np.expand_dims(x, axis=0)
 
-            img = image.load_img("/home/rimawi/Git repos/Artificial-Intelligence//Trash Classification/static/"+path, target_size=(300, 300))
-            x = image.img_to_array(img)
-            x = np.expand_dims(x, axis=0)
+            # images = np.vstack([x])
+            # classes = new_model.predict_classes(images)
 
-            images = np.vstack([x])
-            classes = new_model.predict_classes(images, batch_size=10)
+             # load a single image
+            new_image = load_image(imgpath)
+
+            # check prediction
+            pred = new_model.predict_classes(new_image)
             print("****************************************")
-            data = {0: 'glass', 1: 'paper', 2: 'cardboard', 3: 'plastic', 4: 'metal', 5: 'trash'}
-            pre = data[classes[0]] 
-            print(pre)
+            # print(images)
+            data = {1: 'glass', 3: 'paper', 0: 'cardboard', 4: 'plastic', 2: 'metal', 5: 'trash'}
+            pre = data[pred[0]] 
+            # pre='hello'
+            print(pred[0],pre)
 
             return render_template("index.html" ,path = path,pre=pre)
     return render_template("index.html",path = "")
